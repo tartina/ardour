@@ -178,11 +178,9 @@ AudioPlaylist::read (Sample *buf, Sample *mixdown_buffer, float *gain_buffer, fr
 	   that are not written to by Region::region_at()
 	   for all Regions that cover the area need to be
 	   zeroed.
-
-	   Do we realy need this?
 	*/
 
-	// memset (buf, 0, sizeof (Sample) * cnt);
+	memset (buf, 0, sizeof (Sample) * cnt);
 
 	// Canary
 	buf[0] = 1.0;
@@ -266,6 +264,7 @@ AudioPlaylist::read (Sample *buf, Sample *mixdown_buffer, float *gain_buffer, fr
 								   i->range.to - i->range.from + 1, (int) chan_n,
 								   buf, i->range.from - start));
 		i->region->read_at (buf + i->range.from - start, mixdown_buffer, gain_buffer, i->range.from, i->range.to - i->range.from + 1, chan_n);
+		DEBUG_TRACE (DEBUG::AudioPlayback, string_compose("\tRegion copy buffer start value %1\n", buf[0]));
 		DEBUG_TRACE (DEBUG::AudioPlayback, string_compose("\tRegion copy buffer pre-end value %1\n", buf[cnt - 2]));
 		DEBUG_TRACE (DEBUG::AudioPlayback, string_compose("\tRegion copy buffer end value %1\n", buf[cnt - 1]));
 	}

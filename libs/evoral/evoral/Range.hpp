@@ -89,7 +89,7 @@ OverlapType coverage (T sa, T ea, T sb, T eb) {
 		return OverlapEnd;
 	}
 	/*
-	     |--------------------|     A
+	     |--------------------|    A
 	   --------------------------  B
 	     |-----------------------  B
 	    ----------------------|    B
@@ -198,13 +198,12 @@ RangeList<T> subtract (Range<T> range, RangeList<T> sub)
 	/* The basic idea here is to keep a list of the result ranges, and subtract
 	   the bits of `sub' from them one by one.
 	*/
+
+	/* Here's where we'll put the new current result after subtracting *i from it */
+	RangeList<T> new_result;
+	typename RangeList<T>::List r = result.get ();
 	
 	for (typename RangeList<T>::List::const_iterator i = s.begin(); i != s.end(); ++i) {
-
-		/* Here's where we'll put the new current result after subtracting *i from it */
-		RangeList<T> new_result;
-
-		typename RangeList<T>::List r = result.get ();
 
 		/* Work on all parts of the current result using this range *i */
 		for (typename RangeList<T>::List::const_iterator j = r.begin(); j != r.end(); ++j) {
@@ -220,7 +219,7 @@ RangeList<T> subtract (Range<T> range, RangeList<T> sub)
 				/* Internal overlap of the thing we're subtracting from this bit of the result,
 				   so we might end up with two bits left over.
 				*/
-				if (j->from < (i->from - 1)) {
+				if (j->from < i->from) {
 					new_result.add (Range<T> (j->from, i->from - 1));
 				}
 				if (j->to != i->to) {
@@ -229,7 +228,7 @@ RangeList<T> subtract (Range<T> range, RangeList<T> sub)
 				break;
 			case OverlapStart:
 				/* The bit we're subtracting overlaps the start of the bit of the result */
-				new_result.add (Range<T> (i->to, j->to - 1));
+				new_result.add (Range<T> (i->to, j->to));
 				break;
 			case OverlapEnd:
 				/* The bit we're subtracting overlaps the end of the bit of the result */

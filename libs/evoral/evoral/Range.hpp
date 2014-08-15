@@ -20,6 +20,7 @@
 #define EVORAL_RANGE_HPP
 
 #include <list>
+#include <iostream>
 
 namespace Evoral {
 
@@ -40,7 +41,7 @@ OverlapType coverage (T sa, T ea, T sb, T eb) {
 	   of A and B for each OverlapType.
 
 	   Notes:
-	      Internal: the start points cannot coincide
+	      Internal: the start and end points cannot coincide
 	      External: the start and end points can coincide
 	      Start: end points can coincide
 	      End: start points can coincide
@@ -53,13 +54,14 @@ OverlapType coverage (T sa, T ea, T sb, T eb) {
 	     |--------------------|   A
 	          |------|            B
 	        |-----------------|   B
+	     |----------------|       B
 
 
              "B is internal to A"
 
 	*/
 
-	if ((sb > sa) && (eb <= ea)) {
+	if (((sb > sa) && (eb <= ea)) || ((sb == sa) && (eb < ea))) {
 		return OverlapInternal;
 	}
 
@@ -73,7 +75,7 @@ OverlapType coverage (T sa, T ea, T sb, T eb) {
 
 	*/
 
-	if ((eb >= sa) && (eb <= ea)) {
+	if ((eb >= sa) && (eb <= ea) && (sb < sa)) {
 		return OverlapStart;
 	}
 	/*
@@ -85,7 +87,7 @@ OverlapType coverage (T sa, T ea, T sb, T eb) {
             "B overlaps the end of A"
 
 	*/
-	if ((sb > sa) && (sb <= ea)) {
+	if ((sb > sa) && (sb <= ea) && (eb > ea)) {
 		return OverlapEnd;
 	}
 	/*
@@ -214,6 +216,7 @@ RangeList<T> subtract (Range<T> range, RangeList<T> sub)
 				   so pass it through.
 				*/
 				new_result.add (*j);
+				std::cout << "OverlapNone" << std::endl;
 				break;
 			case OverlapInternal:
 				/* Internal overlap of the thing we're subtracting from this bit of the result,
@@ -222,21 +225,28 @@ RangeList<T> subtract (Range<T> range, RangeList<T> sub)
 				if (j->from < i->from) {
 					new_result.add (Range<T> (j->from, i->from - 1));
 				}
-				if (j->to != i->to) {
-					new_result.add (Range<T> (i->to, j->to));
+				if (j->to > i->to) {
+					new_result.add (Range<T> (i->to + 1, j->to));
 				}
+				std::cout << "OverlapInternal" << std::endl;
 				break;
 			case OverlapStart:
 				/* The bit we're subtracting overlaps the start of the bit of the result */
 				new_result.add (Range<T> (i->to, j->to));
+				std::cout << "OverlapStart" << std::endl;
 				break;
 			case OverlapEnd:
 				/* The bit we're subtracting overlaps the end of the bit of the result */
 				new_result.add (Range<T> (j->from, i->from - 1));
+				std::cout << "OverlapEnd" << std::endl;
 				break;
 			case OverlapExternal:
 				/* total overlap of the bit we're subtracting with the result bit, so the
 				   result bit is completely removed; do nothing */
+				std::cout << "OverlapExternal" << std::endl;
+				break;
+			default:
+				std::cout << "OverlapUnknown" << std::endl;
 				break;
 			}
 		}

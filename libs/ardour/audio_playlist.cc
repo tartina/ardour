@@ -182,11 +182,6 @@ AudioPlaylist::read (Sample *buf, Sample *mixdown_buffer, float *gain_buffer, fr
 
 	memset (buf, 0, sizeof (Sample) * cnt);
 
-	// Canary
-	buf[0] = 1.0;
-	buf[cnt - 2] = -1.0;
-	buf[cnt - 1] = -1.0;
-
 	/* this function is never called from a realtime thread, so
 	   its OK to block (for short intervals).
 	*/

@@ -221,8 +221,7 @@ AudioPlaylist::read (Sample *buf, Sample *mixdown_buffer, float *gain_buffer, fr
 		DEBUG_TRACE (DEBUG::AudioPlayback, string_compose("Region %1, range %2 - %3\n",
 								 ar->name(), region_range.from, region_range.to))
 
-		/* ... and then remove the bits that are already 
-			done */
+		/* ... and then remove the bits that are already done */
 
 		Evoral::RangeList<framepos_t> region_to_do = Evoral::subtract (region_range, done);
 

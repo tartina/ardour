@@ -567,7 +567,6 @@ AudioRegion::read_at (Sample *buf, Sample *mixdown_buffer, float *gain_buffer,
 	if (read_from_sources (_sources, _length, mixdown_buffer, position, to_read, chan_n) != to_read) {
 		return 0;
 	}
-	DEBUG_TRACE (DEBUG::AudioPlayback, string_compose("\tMixdown buffer start value %1\n", mixdown_buffer[0]));
 
 	/* APPLY REGULAR GAIN CURVES AND SCALING TO mixdown_buffer */
 
@@ -670,8 +669,6 @@ AudioRegion::read_at (Sample *buf, Sample *mixdown_buffer, float *gain_buffer,
 		} else {
 			_fade_out->curve().get_vector (curve_offset, curve_offset + fade_out_limit, gain_buffer, fade_out_limit);
 		}
-
-		DEBUG_TRACE (DEBUG::AudioPlayback, string_compose("\tGain buffer start value %1, buffer start value %2\n", gain_buffer[0], buf[0]));
 
 		/* Mix our newly-read data with whatever was already there,
 		   with the fade out applied to our data.

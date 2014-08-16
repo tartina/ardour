@@ -218,9 +218,6 @@ AudioPlaylist::read (Sample *buf, Sample *mixdown_buffer, float *gain_buffer, fr
 		region_range.from = max (region_range.from, start);
 		region_range.to = min (region_range.to, start + cnt - 1);
 
-		DEBUG_TRACE (DEBUG::AudioPlayback, string_compose("Region %1, range %2 - %3\n",
-								 ar->name(), region_range.from, region_range.to))
-
 		/* ... and then remove the bits that are already done */
 
 		Evoral::RangeList<framepos_t> region_to_do = Evoral::subtract (region_range, done);
@@ -233,10 +230,6 @@ AudioPlaylist::read (Sample *buf, Sample *mixdown_buffer, float *gain_buffer, fr
 
 		for (Evoral::RangeList<framepos_t>::List::iterator j = t.begin(); j != t.end(); ++j) {
 			Evoral::Range<framepos_t> d = *j;
-
-		DEBUG_TRACE (DEBUG::AudioPlayback, string_compose("Post sub region %1, range %2 - %3\n",
-								 ar->name(), d.from, d.to))
-
 			to_do.push_back (Segment (ar, d));
 
 			if (ar->opaque ()) {
@@ -258,14 +251,7 @@ AudioPlaylist::read (Sample *buf, Sample *mixdown_buffer, float *gain_buffer, fr
 								   i->range.to - i->range.from + 1, (int) chan_n,
 								   buf, i->range.from - start));
 		i->region->read_at (buf + i->range.from - start, mixdown_buffer, gain_buffer, i->range.from, i->range.to - i->range.from + 1, chan_n);
-		DEBUG_TRACE (DEBUG::AudioPlayback, string_compose("\tRegion copy buffer start value %1\n", buf[0]));
-		DEBUG_TRACE (DEBUG::AudioPlayback, string_compose("\tRegion copy buffer pre-end value %1\n", buf[cnt - 2]));
-		DEBUG_TRACE (DEBUG::AudioPlayback, string_compose("\tRegion copy buffer end value %1\n", buf[cnt - 1]));
 	}
-
-	DEBUG_TRACE (DEBUG::AudioPlayback, string_compose("\tBuffer start value %1\n", buf[0]));
-	DEBUG_TRACE (DEBUG::AudioPlayback, string_compose("\tBuffer pre-end value %1\n", buf[cnt - 2]));
-	DEBUG_TRACE (DEBUG::AudioPlayback, string_compose("\tBuffer end value %1\n", buf[cnt - 1]));
 
 	return cnt;
 }

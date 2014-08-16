@@ -20,7 +20,6 @@
 #define EVORAL_RANGE_HPP
 
 #include <list>
-#include <iostream>
 
 namespace Evoral {
 
@@ -216,7 +215,6 @@ RangeList<T> subtract (Range<T> range, RangeList<T> sub)
 				   so pass it through.
 				*/
 				new_result.add (*j);
-				std::cout << "OverlapNone" << std::endl;
 				break;
 			case OverlapInternal:
 				/* Internal overlap of the thing we're subtracting from this bit of the result,
@@ -228,25 +226,18 @@ RangeList<T> subtract (Range<T> range, RangeList<T> sub)
 				if (j->to > i->to) {
 					new_result.add (Range<T> (i->to + 1, j->to));
 				}
-				std::cout << "OverlapInternal" << std::endl;
 				break;
 			case OverlapStart:
 				/* The bit we're subtracting overlaps the start of the bit of the result */
 				new_result.add (Range<T> (i->to, j->to));
-				std::cout << "OverlapStart" << std::endl;
 				break;
 			case OverlapEnd:
 				/* The bit we're subtracting overlaps the end of the bit of the result */
 				new_result.add (Range<T> (j->from, i->from - 1));
-				std::cout << "OverlapEnd" << std::endl;
 				break;
 			case OverlapExternal:
 				/* total overlap of the bit we're subtracting with the result bit, so the
 				   result bit is completely removed; do nothing */
-				std::cout << "OverlapExternal" << std::endl;
-				break;
-			default:
-				std::cout << "OverlapUnknown" << std::endl;
 				break;
 			}
 		}

@@ -40,7 +40,7 @@ OverlapType coverage (T sa, T ea, T sb, T eb) {
 	   of A and B for each OverlapType.
 
 	   Notes:
-	      Internal: the start and end points cannot coincide
+	      Internal: the start and end points cannot both coincide
 	      External: the start and end points can coincide
 	      Start: end points can coincide
 	      End: start points can coincide

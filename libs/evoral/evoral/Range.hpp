@@ -200,11 +200,12 @@ RangeList<T> subtract (Range<T> range, RangeList<T> sub)
 	   the bits of `sub' from them one by one.
 	*/
 
-	/* Here's where we'll put the new current result after subtracting *i from it */
-	RangeList<T> new_result;
-	typename RangeList<T>::List r = result.get ();
-	
 	for (typename RangeList<T>::List::const_iterator i = s.begin(); i != s.end(); ++i) {
+
+		/* Here's where we'll put the new current result after subtracting *i from it */
+		RangeList<T> new_result;
+
+		typename RangeList<T>::List r = result.get ();
 
 		/* Work on all parts of the current result using this range *i */
 		for (typename RangeList<T>::List::const_iterator j = r.begin(); j != r.end(); ++j) {

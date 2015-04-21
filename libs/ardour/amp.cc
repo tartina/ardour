@@ -375,7 +375,7 @@ void
 Amp::GainControl::set_value (double val)
 {
 	AutomationControl::set_value (min (val, (double) Config->get_max_gain()));
-	_amp->session().set_dirty ();
+	if (! _amp->_gain_control->automation_playback()) _amp->session().set_dirty ();
 }
 
 double
